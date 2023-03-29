@@ -6,6 +6,7 @@ import random
 import pickle
 import sched
 import smtplib
+import collections
 from random import randint
 from collections import Counter
 
@@ -183,7 +184,47 @@ OUTCOME PROBABILITY
 """
 
 
-"""count unique words"""
+def count_words(filepath):
+    """count unique words"""
+    with open(filepath, 'r', encoding='utf-8') as file:
+        all_words = re.findall(r"[0-9a-zA-Z-']+", file.read())
+        all_words = [word.upper() for word in all_words]
+        print(f'\nTotal Words: {len(all_words)}')
+
+        word_counts = collections.Counter(all_words)
+
+        print('\nTop 20 Words:')
+        for word in word_counts.most_common(20):
+            print(f'{word[0]}\t{word[1]}')
+
+"""
+>count_words("Sample.txt")
+
+Total Words: 255
+
+Top 20 Words:
+THE     16
+OF      13
+IN      9
+TO      7
+DISNEY  6
+A       6
+IGER    5
+COMPANY 5
+WILL    5
+000     5
+S       5
+SAID    4
+LAYOFFS 4
+AND     4
+7       3
+JOBS    3
+ROUND   3
+CNN     2
+BOB     2
+HIS     2
+"""
+
 
 
 """generate a password"""
@@ -202,7 +243,7 @@ OUTCOME PROBABILITY
 
 def main():
     """ main function """
-    roll_dice(6,8)
+    count_words("Sample.txt")
 
 if __name__ == '__main__':
     main()
