@@ -226,7 +226,7 @@ HIS     2
 """
 
 
-
+def generate_passphrase(num)
 """generate a password"""
 
 
