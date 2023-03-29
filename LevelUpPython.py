@@ -8,8 +8,10 @@ import sched
 import smtplib
 import collections
 import secrets
+import csv
 from random import randint
 from collections import Counter
+from itertools import product
 
 def get_prime_factors(number):
     """find prime factors"""
@@ -242,10 +244,64 @@ def generate_passphrase(num_words, wordlist_path='diceware.wordlist.asc'):
 frog dar tete dim hertz ibn answer
 """
 
-"""merge csv files"""
+
+def merge_csv(csv_list, output_path):
+    """merge csv files"""
+    # build list with all fieldnames
+    fieldnames = []
+    for file in csv_list:
+        with open(file, 'r', encoding='utf-8') as input_csv:
+            field = csv.DictReader(input_csv).fieldnames
+            fieldnames.extend(f for f in field if f not in fieldnames)
+    
+    # write data to output file based on field names
+    with open(output_path, 'w', encoding='utf-8', newline='') as output_csv:
+        writer = csv.DictWriter(output_csv, fieldnames=fieldnames)
+        writer.writeheader()
+        for file in csv_list:
+            with open(file, 'r', encoding='utf-8') as input_csv:
+                reader = csv.DictReader(input_csv)
+                for row in reader:
+                    writer.writerow(row)
 
 
-"""solve a sudoku"""
+def solve_sudoku(puzzle):
+    """solve a sudoku"""
+    for (row, col) in product(range(0, 9), repeat=2):
+        if puzzle[row][col] == 0: # find an unassigned cell
+            for num in range(1, 10):
+                allowed = True # check if num is allowed in row/col/box
+                for i in range(0, 9):
+                    if num in (puzzle[i][col], puzzle[row][i]):
+                        allowed = False
+                        break # not allowed in row or col
+                for (i, j) in product(range(0, 3), repeat=2):
+                    if puzzle[row - row % 3 + i][col - col % 3 + j] == num:
+                        allowed = False
+                        break # not allowed in box
+                if allowed:
+                    puzzle[row][col] = num
+                    if trial := solve_sudoku(puzzle):
+                        return trial
+                    puzzle[row][col] = 0
+            return False # could not place a number in this cell
+    return puzzle
+        
+
+def print_sudoku(puzzle):
+    """replace zeroes with dashes"""
+    puzzle = [['*' if num == 0 else num for num in row] for row in puzzle]
+    print()
+    for row in range(0, 9):
+        if ((row % 3 == 0) and (row != 0)):
+            print('-' * 33) # draw horizontal line
+        for col in range(0, 9):
+            if ((col % 3 == 0) and (col != 0)):
+                print(' | ', end='') # draw vertical line
+            print(f' {puzzle[row][col]} ', end='')
+        print()
+    print()
+
 
 
 """build a zip archive"""
@@ -255,7 +311,18 @@ frog dar tete dim hertz ibn answer
 
 def main():
     """ main function """
-    print(generate_passphrase(7))
+    test_puzzle = [[5,3,0,0,7,0,0,0,0],
+              [6,0,0,1,9,5,0,0,0],
+              [0,9,8,0,0,0,0,6,0],
+              [8,0,0,0,6,0,0,0,3],
+              [4,0,0,8,0,3,0,0,1],
+              [7,0,0,0,2,0,0,0,6],
+              [0,6,0,0,0,0,2,8,0],
+              [0,0,0,4,1,9,0,0,5],
+              [0,0,0,0,8,0,0,7,9]]
+    print_sudoku(test_puzzle)
+    solution = solve_sudoku(test_puzzle)
+    print_sudoku(solution)
 
 if __name__ == '__main__':
     main()
