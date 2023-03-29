@@ -7,6 +7,7 @@ import pickle
 import sched
 import smtplib
 import collections
+import secrets
 from random import randint
 from collections import Counter
 
@@ -226,9 +227,20 @@ HIS     2
 """
 
 
-def generate_passphrase(num)
-"""generate a password"""
+def generate_passphrase(num_words, wordlist_path='diceware.wordlist.asc'):
+    """generate a password"""
+    with open(wordlist_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()[2:7778]
+        word_list = [line.split()[1] for line in lines]
 
+    words = [secrets.choice(word_list) for i in range(num_words)]
+    return ' '.join(words)
+
+"""
+>generate_passphrase(7)
+
+frog dar tete dim hertz ibn answer
+"""
 
 """merge csv files"""
 
@@ -243,7 +255,7 @@ def generate_passphrase(num)
 
 def main():
     """ main function """
-    count_words("Sample.txt")
+    print(generate_passphrase(7))
 
 if __name__ == '__main__':
     main()
