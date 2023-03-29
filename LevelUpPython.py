@@ -1,6 +1,8 @@
 #Lessons from the Level Up: Python LinkedIn Learning Series
 #https://www.linkedin.com/learning/level-up-python
 import re
+import time
+import random
 
 #find prime factors
 def get_prime_factors(number):
@@ -42,6 +44,22 @@ def index_all(search_list, item):
         index_list.append([index] + i)
   return index_list
 
-
-
+#play the waiting game
+def waiting_game():
+  target = random.randint(2,4) #target seconds to wait
+  print(f'\nYour target time is {target} seconds.')
+  
+  input(' ---Press Enter to begin--- ')
+  start = time.perf_counter()
+  
+  input(f'\n...Press Enter again after {target} seconds...')
+  elapsed = time.perf_counter() - start
+  
+  print(f'\nElapsed Time: {elapsed :.3f} seconds')
+  if elapsed == target:
+    print('(Unbelievable! Perfect timing!)')
+  elif elapsed < target:
+    print(f'({target - elapsed :.3f} seconds too fast)')
+  else:
+    print(f'({target - elapsed :.3f} seconds too slow)')
 
