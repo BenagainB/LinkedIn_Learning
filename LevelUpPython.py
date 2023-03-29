@@ -9,9 +9,11 @@ import smtplib
 import collections
 import secrets
 import csv
+import os
 from random import randint
 from collections import Counter
 from itertools import product
+from zipfile import ZipFile
 
 def get_prime_factors(number):
     """find prime factors"""
@@ -302,16 +304,8 @@ def print_sudoku(puzzle):
         print()
     print()
 
-
-
-"""build a zip archive"""
-
-
-"""download sequential files"""
-
-def main():
-    """ main function """
-    test_puzzle = [[5,3,0,0,7,0,0,0,0],
+"""
+test_puzzle = [[5,3,0,0,7,0,0,0,0],
               [6,0,0,1,9,5,0,0,0],
               [0,9,8,0,0,0,0,6,0],
               [8,0,0,0,6,0,0,0,3],
@@ -320,9 +314,63 @@ def main():
               [0,6,0,0,0,0,2,8,0],
               [0,0,0,4,1,9,0,0,5],
               [0,0,0,0,8,0,0,7,9]]
-    print_sudoku(test_puzzle)
-    solution = solve_sudoku(test_puzzle)
-    print_sudoku(solution)
+print_sudoku(test_puzzle)
+solution = solve_sudoku(test_puzzle)
+print_sudoku(solution)
+
+5  3  *  |  *  7  *  |  *  *  * 
+ 6  *  *  |  1  9  5  |  *  *  * 
+ *  9  8  |  *  *  *  |  *  6  * 
+---------------------------------
+ 8  *  *  |  *  6  *  |  *  *  3 
+ 4  *  *  |  8  *  3  |  *  *  1 
+ 7  *  *  |  *  2  *  |  *  *  6 
+---------------------------------
+ *  6  *  |  *  *  *  |  2  8  * 
+ *  *  *  |  4  1  9  |  *  *  5 
+ *  *  *  |  *  8  *  |  *  7  9 
+
+
+ 5  3  4  |  6  7  8  |  9  1  2 
+ 6  7  2  |  1  9  5  |  3  4  8 
+ 1  9  8  |  3  4  2  |  5  6  7 
+---------------------------------
+ 8  5  9  |  7  6  1  |  4  2  3 
+ 4  2  6  |  8  5  3  |  7  9  1 
+ 7  1  3  |  9  2  4  |  8  5  6 
+---------------------------------
+ 9  6  1  |  5  3  7  |  2  8  4 
+ 2  8  7  |  4  1  9  |  6  3  5 
+ 3  4  5  |  2  8  6  |  1  7  9 
+"""
+
+
+def zip_all(search_dir, extension_list, output_path):
+    """build a zip archive"""
+    with ZipFile(output_path, 'w') as output_zip:
+        for root, _, files in os.walk(search_dir):
+            rel_path = os.path.relpath(root, search_dir)
+            for file in files:
+                _, ext = os.path.splitext(file)
+                if ext.lower() in extension_list:
+                    output_zip.write(os.path.join(root, file),
+                                     arcname=os.path.join(rel_path, file))
+
+"""
+zip_all('my_stuff', ['.jpg', '.png'], 'my_stuff.zip')
+    # my_stuff folder at same level as script
+    # goes through files and selects all .jpg and .png files
+    # creates a new .zip folder at script level containing zipped files
+"""
+
+"""download sequential files"""
+
+def main():
+    """ main function """
+    zip_all('my_stuff', ['.jpg', '.png'], 'my_stuff.zip')
+    # my_stuff folder at same level as script
+    # goes through files and selects all .jpg and .png files
+    # creates a new .zip folder at script level containing zipped files
 
 if __name__ == '__main__':
     main()
