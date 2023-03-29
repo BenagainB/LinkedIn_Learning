@@ -2,6 +2,7 @@
 #https://www.linkedin.com/learning/level-up-python
 import re
 
+#find prime factors
 def get_prime_factors(number):
   factors = []
   divisor = 2
@@ -13,12 +14,20 @@ def get_prime_factors(number):
       divisor += 1
   return factors
 
-#'Go hang a salami - I'm a lasanga hog' will evaluate True
+#identify a plindrome
 def is_palindrome(phrase):
+  #'Go hang a salami - I'm a lasanga hog' will evaluate True
   forwards = ''.join(re.findall(r'[a-z]+', phrase.lower()))
   backwards = forwards[::-1]
   return forwards == backwards
 
-
+#sort a string
+def sort_words(input):
+  #sorts 'apple ORANGE banana' as 'apple banana ORANGE' ignoring case for sort but preserving for output
+  words = input.split()
+  words = [w.lower() + w for w in words]
+  words.sort()
+  words = [w[len//2:] for w in words]
+  return ' '.join(words)
 
 
