@@ -5,6 +5,9 @@ import time
 import random
 import pickle
 import sched
+import smtplib
+from random import randint
+from collections import Counter
 
 def get_prime_factors(number):
     """find prime factors"""
@@ -113,13 +116,93 @@ Howdy! How are you?
 """
 
 
+SENDER_EMAIL = 'example@gmail.com'
+SENDER_PASSWORD = 'emailPASSWORD'
+# receiver_email = 'bobBlahLawBlog@gmail.com'
+# subject = "Hey, Buddy"
+# body = "Long time no see. Send me a reply when you get back to your office."
+
+def send_email(receiver_email, subject, body):
+    """send an email"""
+    # may require security configurations to allow privileged access to email client
+    message = f'Subject: {subject}\n\n{body}'
+    with smtplib.SMTP('smtp.office365.com', 587) as server:
+        # replace 'smtp.office365.com' with your email server name
+        # replace 587 with your server's port number
+        server.starttls()
+        server.login(SENDER_EMAIL, SENDER_PASSWORD)
+        server.sendmail(SENDER_EMAIL, receiver_email, message)
+
+
+def roll_dice(*dice, num_trials=1_000_000):
+    """simulate dice"""
+    counts = Counter()
+    for _ in range(num_trials):
+        counts[sum((randint(1, sides) for sides in dice))] += 1
+    
+    print('\nOUTCOME\tPROBABILITY')
+    for outcome in range(len(dice), sum(dice) + 1):
+        print(f'{outcome}\t{counts[outcome] * 100 / num_trials :0.2f}%')
+
+"""
+>roll_dice(4, 6, 6)
+
+OUTCOME PROBABILITY
+3       0.69%
+4       2.08%
+5       4.17%
+6       6.97%
+7       9.67%
+8       12.46%
+9       13.85%
+10      13.86%
+11      12.53%
+12      9.76%
+13      6.96%
+14      4.18%
+15      2.11%
+16      0.70%
+"""
+"""
+>roll_dice(6,8)
+
+OUTCOME PROBABILITY
+2       2.06%
+3       4.18%
+4       6.26%
+5       8.31%
+6       10.45%
+7       12.46%
+8       12.50%
+9       12.47%
+10      10.47%
+11      8.31%
+12      6.27%
+13      4.18%
+14      2.07%
+"""
+
+
+"""count unique words"""
+
+
+"""generate a password"""
+
+
+"""merge csv files"""
+
+
+"""solve a sudoku"""
+
+
+"""build a zip archive"""
+
+
+"""download sequential files"""
 
 def main():
     """ main function """
-    test_dict = {1: 'a', 2: 'b', 3: 'c'}
-    save_dict(test_dict, "test.pickle")
-    recovered = load_dict('test.pickle')
-    print(recovered)
+    roll_dice(6,8)
 
 if __name__ == '__main__':
     main()
