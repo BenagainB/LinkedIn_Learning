@@ -4,6 +4,7 @@ import re
 import time
 import random
 import pickle
+import sched
 
 def get_prime_factors(number):
     """find prime factors"""
@@ -88,8 +89,29 @@ test_dict = {1: 'a', 2: 'b', 3: 'c'}
 """
 
 
-def schedule_function():
+def schedule_function(event_time, function, *args):
     """schedule a function"""
+    s = sched.scheduler(time.time, time.sleep)
+    s.enterabs(event_time, 1, function, argument=args)
+    print(f'{function.__name__}() scheduled for {time.asctime(time.localtime(event_time))}')
+    s.run()
+
+"""
+>>> import time
+>>> from LevelUpPython import schedule_function
+>>> schedule_function(time.time() +1, print, 'Howdy!')
+print() scheduled for Wed Mar 29 09:21:55 2023
+Howdy!
+"""
+
+"""
+>>> import time
+>>> from LevelUpPython import schedule_function
+>>> schedule_function(time.time() +1, print, 'Howdy!', 'How are you?')
+print() scheduled for Wed Mar 29 09:21:55 2023
+Howdy! How are you?
+"""
+
 
 
 def main():
