@@ -30,4 +30,18 @@ def sort_words(input):
   words = [w[len//2:] for w in words]
   return ' '.join(words)
 
+#find all list items
+def index_all(search_list, item):
+  #searching 'example = [[[1,2,3], 2, [1,3]], [1,2,3]]' for presence of 'example, 2' resutls in '[[0,0,1], [0,1], [1,1]]'
+  #searching 'example = [[[1,2,3], 2, [1,3]], [1,2,3]]' for presence of 'example, [1,2,3]' resutls in '[[0,0], [1]]'
+  for index, value in enumerate(search_list):
+    if value == item:
+      index_list.append([index])
+    elif isinstance(search_list[index], list):
+      for i in index_all(searchlist[index], item):
+        index_list.append([index] + i)
+  return index_list
+
+
+
 
